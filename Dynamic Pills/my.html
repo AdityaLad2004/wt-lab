@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Clubs in VIT</title>
+  </head>
+  <body class="p-4">
+    <h3 class="text-center mb-4">
+      Clubs in Vishwakarma Institute of Technology, Pune
+    </h3>
+    <ul class="nav nav-pills mb-3" id="clubTabs">
+      <li class="nav-item">
+        <button class="nav-link active" data-type="gdsc">GDSC</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-type="mlsc">MLSC</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-type="csi">CSI</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-type="icon">ICON</button>
+      </li>
+    </ul>
+    <div>
+      <input
+        type="text"
+        name="input"
+        id="clubInput"
+        class="form-control mb-2"
+        placeholder="Enter members name"
+      />
+      <button id="club-button" class="btn btn-primary">Add member</button>
+    </div>
+
+    <ul id="member-list"></ul>
+    <script>
+      let currentTab = "gdsc";
+      let editIndex = -1;
+
+      function loadMembers() {
+        $("#member-list").empty();
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        list.forEach((p, i) => {
+          $("#member-list").append(`
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>${p}</span>
+                <div>
+                <button class="btn btn-sm btn-warning editbtn" data-id="${i}">Edit</button>
+                <button class="btn btn-sm btn-danger deleteBtn" data-id="${i}">Delete</button>
+                </div>
+            </li>
+            `);
+        });
+      }
+      $("#clubTabs button").click(function () {
+        $("#clubTabs button").removeClass("active");
+        $(this).addClass("active");
+        currentTab = $(this).data("type");
+        editIndex = -1;
+        $("#clubInput").val("");
+        loadMembers();
+      });
+      $("#club-button").click(function () {
+        let title = $("#clubInput").val().trim();
+        if (!title) return;
+
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+
+        if (editIndex >= 0) {
+          list[editIndex] = title;
+          editIndex = -1;
+          $("#club-button").text("Add Member");
+        } else {
+          list.push(title);
+        }
+        localStorage.setItem(currentTab, JSON.stringify(list));
+        $("#clubInput").val("");
+        loadMembers();
+      });
+
+      $("#member-list").on("click", ".editbtn", function () {
+        editIndex = $(this).data("id");
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        $("#clubInput").val(list[editIndex]);
+        $("#club-button").text("Update Member");
+      });
+
+      $("#member-list").on("click", ".deleteBtn", function () {
+        let id = $(this).data("id");
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        list.splice(id, 1);
+        localStorage.setItem(currentTab, JSON.stringify(list));
+        loadMembers();
+      });
+
+      $(document).ready(loadMembers);
+    </script>
+  </body>
+</html>

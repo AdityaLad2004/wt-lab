@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <title>Projects in VIT</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <body class="p-4">
+    <h3 class="text-center mb-4">VIT Project Explorer</h3>
+
+    <ul class="nav nav-pills mb-3" id="projectTabs">
+      <li class="nav-item">
+        <button class="nav-link active" data-type="course">
+          Course Projects
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-type="edi">EDI Projects</button>
+      </li>
+    </ul>
+
+    <div class="mb-3">
+      <input
+        type="text"
+        id="projectInput"
+        class="form-control mb-2"
+        placeholder="Enter project title"
+      />
+      <button class="btn btn-primary" id="addBtn">Add Project</button>
+    </div>
+
+    <ul class="list-group" id="projectList"></ul>
+
+    <script>
+      let currentTab = "course";
+      let editingIndex = -1;
+
+      function loadProjects() {
+        $("#projectList").empty();
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        list.forEach((p, i) => {
+          $("#projectList").append(`
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>${p}</span>
+            <div>
+              <button class="btn btn-sm btn-warning me-1 editBtn" data-id="${i}">Edit</button>
+              <button class="btn btn-sm btn-danger deleteBtn" data-id="${i}">Delete</button>
+            </div>
+          </li>
+        `);
+        });
+      }
+
+      $("#projectTabs button").click(function () {
+        $("#projectTabs button").removeClass("active");
+        $(this).addClass("active");
+        currentTab = $(this).data("type");
+        editingIndex = -1;
+        $("#projectInput").val("");
+        loadProjects();
+      });
+
+      $("#addBtn").click(function () {
+        let title = $("#projectInput").val().trim();
+        if (!title) return;
+
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        if (editingIndex >= 0) {
+          list[editingIndex] = title;
+          editingIndex = -1;
+          $("#addBtn").text("Add Project");
+        } else {
+          list.push(title);
+        }
+
+        localStorage.setItem(currentTab, JSON.stringify(list));
+        $("#projectInput").val("");
+        loadProjects();
+      });
+
+      $("#projectList").on("click", ".deleteBtn", function () {
+        let id = $(this).data("id");
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        list.splice(id, 1);
+        localStorage.setItem(currentTab, JSON.stringify(list));
+        loadProjects();
+      });
+
+      $("#projectList").on("click", ".editBtn", function () {
+        editingIndex = $(this).data("id");
+        let list = JSON.parse(localStorage.getItem(currentTab)) || [];
+        $("#projectInput").val(list[editingIndex]);
+        $("#addBtn").text("Update Project");
+      });
+
+      $(document).ready(loadProjects);
+    </script>
+  </body>
+</html>
