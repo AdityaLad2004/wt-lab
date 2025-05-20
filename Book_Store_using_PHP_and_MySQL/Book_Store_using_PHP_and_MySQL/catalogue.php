@@ -56,3 +56,14 @@ $result = $conn->query("SELECT * FROM books");
   </div>
 </body>
 </html>
+
+
+
+CREATE TABLE books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    price INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
