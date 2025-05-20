@@ -31,3 +31,38 @@ for ($i = 0; $i < 4; $i++) {
 }
 echo "</ul>";
 ?>
+
+
+
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    roll_no VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE mse (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    subject1 INT NOT NULL,
+    subject2 INT NOT NULL,
+    subject3 INT NOT NULL,
+    subject4 INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE ese (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    subject1 INT NOT NULL,
+    subject2 INT NOT NULL,
+    subject3 INT NOT NULL,
+    subject4 INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);
