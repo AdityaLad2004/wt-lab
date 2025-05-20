@@ -66,3 +66,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     </div>    
 </body>
 </html>
+
+
+
+
+
+
+CREATE TABLE consumer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE billing (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    consumer_id INT NOT NULL,
+    units INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    billing_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (consumer_id) REFERENCES consumer(id) ON DELETE CASCADE
+);
